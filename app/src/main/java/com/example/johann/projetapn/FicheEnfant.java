@@ -31,5 +31,13 @@ public class FicheEnfant extends AppCompatActivity {
 
         String prenom = enfant.getPrenom();
         Prenom.setText(prenom);
+
+        if(Cadeau.isChecked()){
+            enfant.setCadeau(true);
+        }else if (Sage.isChecked()){
+            enfant.setSage(true);
+        }else if(Lettre.isChecked()){
+            enfant.setLettre(true);
+        }
     }
 }
