@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -27,12 +28,11 @@ public class Accueil extends AppCompatActivity {
     Button boutonChercher;
     EditText champPrenom;
     Spinner listeAnnee;
-    Spinner listeSexe;
+    CheckBox CheckGarcon;
+    CheckBox CheckFille;
     String url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
     ArrayAdapter adapterListeEnfant;
     ArrayAdapter adapterListeAnnee;
-    ArrayAdapter adapterListeSexe;
-    String prenoms = "BAMBI";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,9 @@ public class Accueil extends AppCompatActivity {
         boutonChercher = (Button)findViewById(R.id.boutonChercher);
         champPrenom = (EditText)findViewById(R.id.champPrenom);
         listeAnnee = (Spinner)findViewById(R.id.listeAnnee);
-        listeSexe = (Spinner)findViewById(R.id.listeSexe);
+        CheckGarcon = (CheckBox)findViewById(R.id.Garcon);
+        CheckFille = (CheckBox)findViewById(R.id.Fille);
+
 
         //Adapter de notre liste d'enfant
         final ArrayList<ListeEnfant> listeEnfantNoel = new ArrayList<>();
@@ -53,35 +55,68 @@ public class Accueil extends AppCompatActivity {
 
         //Adapter du spinner pour l'annee
         final ArrayList<String> listeAnne = new ArrayList<>();
-        for(int i = 2001;i<=2030;i++){
+        for(int i = 2001;i<=2020;i++){
             listeAnne.add(Integer.toString(i));
         }
         adapterListeAnnee = new ArrayAdapter<>(Accueil.this,android.R.layout.simple_spinner_item,listeAnne);
         listeAnnee.setAdapter(adapterListeAnnee);
-
-        //Adapter du spinner pour le sexe
-        final ArrayList<String> ListeSexe = new ArrayList<>();
-        ListeSexe.add("GARCON");
-        ListeSexe.add("FILLE");
-        adapterListeSexe = new ArrayAdapter<>(Accueil.this,android.R.layout.simple_spinner_item,ListeSexe);
-        listeSexe.setAdapter(adapterListeSexe);
         majListeEnfant(url);
+
+        //Bouton rechercher
+        boutonChercher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String prenom = null;
+                String annee_naissance = null;
+                try{
+                    prenom = champPrenom.getText().toString();
+                    annee_naissance = listeAnnee.getSelectedItem().toString();
+                }catch(Exception e){}
+                    boolean estGarcon = CheckGarcon.isChecked();
+                    boolean estFille = CheckFille.isChecked();
+                    String url = Filtre(prenom,annee_naissance,estGarcon,estFille);
+                    majListeEnfant(url);
+            }
+        });
+
+        //
 
         //Passage dans une autre activité
         listeEnfant.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent FicheEnfantActivity = new Intent(Accueil.this,FicheEnfant.class );
-                FicheEnfantActivity.putExtra("prenom",prenoms);
+                ListeEnfant enfant = (ListeEnfant)parent.getAdapter().getItem(position);
+                FicheEnfantActivity.putExtra("enfant",enfant);
                 startActivity(FicheEnfantActivity);
                 finish();
             }
         });
-
-
     }
+
+    protected String Filtre(String prenom, String anneeEnfant, boolean garcon, boolean fille){
+        String Url = url;
+        if(prenom != null && !prenom.equals("")){
+            Url += "&refine.prenom="+prenom.toUpperCase();
+        }
+        if(anneeEnfant != null){
+            Url += "&refine.annee_naissance="+anneeEnfant.toUpperCase();
+        }
+        if(garcon && !fille){
+            Url+= "&refine.sexe=GARCON";
+        }
+        if(fille && !garcon){
+            Url += "&refine.sexe=FILLE";
+        }
+        return Url;
+    }
+
+
     //MAJ de la liste d'enfant
     protected void majListeEnfant(String url){
+
+        final boolean estGarcon = CheckGarcon.isChecked();
+        final boolean estFille = CheckFille.isChecked();
         Ion.with(this).load(url).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
