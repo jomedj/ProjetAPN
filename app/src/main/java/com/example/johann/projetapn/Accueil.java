@@ -1,5 +1,6 @@
 package com.example.johann.projetapn;
 
+import android.app.ListActivity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -115,8 +116,6 @@ public class Accueil extends AppCompatActivity {
     //MAJ de la liste d'enfant
     protected void majListeEnfant(String url){
 
-        final boolean estGarcon = CheckGarcon.isChecked();
-        final boolean estFille = CheckFille.isChecked();
         Ion.with(this).load(url).asJsonObject().setCallback(new FutureCallback<JsonObject>() {
             @Override
             public void onCompleted(Exception e, JsonObject result) {
