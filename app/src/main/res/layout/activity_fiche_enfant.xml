@@ -4,16 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FicheEnfant">
+    tools:context=".FicheEnfant"
+    android:background="@drawable/santa">
 
     <TextView
         android:id="@+id/Prenom"
         android:layout_width="212dp"
         android:layout_height="44dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginStart="192dp"
+        android:layout_marginTop="320dp"
         android:textAlignment="center"
-        android:textSize="30sp"
+        android:textSize="36sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -23,8 +24,8 @@
         android:id="@+id/Sage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="350dp"
-        android:layout_marginTop="55dp"
+        android:layout_marginStart="216dp"
+        android:layout_marginTop="428dp"
         android:button="@drawable/sage_custom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -33,8 +34,8 @@
         android:id="@+id/Lettre"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="95dp"
-        android:layout_marginEnd="80dp"
+        android:layout_marginTop="428dp"
+        android:layout_marginEnd="196dp"
         android:button="@drawable/checkbox_custom_01"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -43,8 +44,8 @@
         android:id="@+id/Cadeaux"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="465dp"
-        android:layout_marginTop="15dp"
+        android:layout_marginStart="284dp"
+        android:layout_marginTop="424dp"
         android:button="@drawable/cadeau_custom"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -54,11 +55,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="200dp"
+        android:layout_marginTop="632dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/rounded_button"
         android:text="Validez"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.491"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>

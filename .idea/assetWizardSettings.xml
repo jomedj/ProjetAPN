@@ -34,7 +34,7 @@
                                           <PersistentState>
                                             <option name="values">
                                               <map>
-                                                <entry key="scalingPercent" value="60" />
+                                                <entry key="scalingPercent" value="145" />
                                               </map>
                                             </option>
                                           </PersistentState>
@@ -47,8 +47,8 @@
                                       <entry key="backgroundAssetType" value="COLOR" />
                                       <entry key="backgroundColor" value="f5f9ff" />
                                       <entry key="backgroundLayerName" value="ic_launcher_background" />
-                                      <entry key="foregroundImage" value="C:\Users\Johann\Desktop\lettre.png" />
-                                      <entry key="foregroundLayerName" value="letter_check" />
+                                      <entry key="foregroundImage" value="C:\Users\Johann\Desktop\santa-logo-300x210.jpg" />
+                                      <entry key="foregroundLayerName" value="icon" />
                                       <entry key="outputName" value="letter" />
                                     </map>
                                   </option>

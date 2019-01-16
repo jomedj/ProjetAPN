@@ -2,6 +2,7 @@ package com.example.johann.projetapn;
 
 import android.app.ListActivity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -15,6 +16,7 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -24,7 +26,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Accueil extends AppCompatActivity {
-
+    SharedPreferences preferences;
     ListView listeEnfant;
     Button boutonChercher;
     EditText champPrenom;
@@ -34,11 +36,15 @@ public class Accueil extends AppCompatActivity {
     String url = "https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_prenoms-enfants-nes-nantes&facet=prenom&facet=sexe&facet=annee_naissance";
     ArrayAdapter adapterListeEnfant;
     ArrayAdapter adapterListeAnnee;
+    ArrayList<ListeEnfant> listeEnfantNoel = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accueil);
+
+        preferences = getApplicationContext().getSharedPreferences("pref",0);
+        preferences.edit();
 
         //Récuperation des différents élements
         listeEnfant = (ListView) findViewById(R.id.listeEnfant);
@@ -50,7 +56,7 @@ public class Accueil extends AppCompatActivity {
 
 
         //Adapter de notre liste d'enfant
-        final ArrayList<ListeEnfant> listeEnfantNoel = new ArrayList<>();
+
         adapterListeEnfant = new ArrayAdapter<ListeEnfant>(Accueil.this,android.R.layout.simple_list_item_1,listeEnfantNoel);
         listeEnfant.setAdapter(adapterListeEnfant);
 
@@ -80,7 +86,6 @@ public class Accueil extends AppCompatActivity {
             }
         });
 
-        //
 
         //Passage dans une autre activité
         listeEnfant.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -122,20 +127,39 @@ public class Accueil extends AppCompatActivity {
                 try{
                     JSONObject jsonObject = new JSONObject(String.valueOf(result));
                     JSONArray jsonArray = jsonObject.getJSONArray("records");
-                    adapterListeEnfant.clear();
+                    listeEnfantNoel.clear();
                     for(int i =0; i<jsonArray.length();i++){
                         Object object = jsonArray.getJSONObject(i).getJSONObject("fields");
                         String prenom = String.valueOf(((JSONObject)object).get("prenom"));
                         String annee = String.valueOf(((JSONObject)object).get("annee_naissance"));
                         String sexe = String.valueOf(((JSONObject)object).get("sexe"));
                         ListeEnfant enfant = new ListeEnfant(sexe,prenom,annee);
-                        adapterListeEnfant.add(enfant);
+                        listeEnfantNoel.add(enfant);
                     }
+                    listeEnfantNoel = fusion(listeEnfantNoel);
+                    adapterListeEnfant = new ArrayAdapter<ListeEnfant>(Accueil.this,android.R.layout.simple_list_item_1,listeEnfantNoel);
+                    listeEnfant.setAdapter(adapterListeEnfant);
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                 }
             }
         });
+    }
+
+    public ArrayList<ListeEnfant> fusion(ArrayList<ListeEnfant> lEnfant){
+        ArrayList<ListeEnfant> newLEnfant = lEnfant;
+        Gson gson = new Gson();
+        for (int i = 0; i<newLEnfant.size();i++){
+            ListeEnfant enfant = newLEnfant.get(i);
+            if(!preferences.getString(enfant.id(),"default").equals("default")){
+                String json = preferences.getString(enfant.id(),"default");
+                ListeEnfant kid = gson.fromJson(json,ListeEnfant.class);
+                if(enfant.id().equals(kid.id())){
+                    newLEnfant.set(i,kid);
+                }
+            }
+        }
+        return newLEnfant;
     }
 
 }
