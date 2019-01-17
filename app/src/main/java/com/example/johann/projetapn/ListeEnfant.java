@@ -21,9 +21,7 @@ public class ListeEnfant implements Serializable {
         this.sage = false;
     }
 
-    public String id(){
-        return this.prenom.toUpperCase()+this.annee_naissance.toUpperCase();
-    }
+
     public void setSage(boolean sage) {
         this.sage = sage;
     }
@@ -58,6 +56,10 @@ public class ListeEnfant implements Serializable {
 
     public boolean isLettre() {
         return lettre;
+    }
+
+    public String id(){
+        return this.prenom.toUpperCase()+this.annee_naissance.toUpperCase();
     }
 
     @Override

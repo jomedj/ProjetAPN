@@ -3,6 +3,7 @@ package com.example.johann.projetapn;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +39,7 @@ public class FicheEnfant extends AppCompatActivity {
         final Intent Donnee = getIntent();
         enfant = (ListeEnfant) getIntent().getSerializableExtra("enfant");
 
+        //Si enfant sage alors on change l'etat des checkbox a true
         if(enfant.isSage()){
             Sage.setChecked(true);
         }
@@ -47,6 +49,13 @@ public class FicheEnfant extends AppCompatActivity {
         if(enfant.isLettre()){
             Lettre.setChecked(true);
         }
+
+        Cadeau.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                enfant.setCadeau(!enfant.isCadeau());
+            }
+        });
 
         Sage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,17 +71,12 @@ public class FicheEnfant extends AppCompatActivity {
             }
         });
 
-        Cadeau.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                enfant.setCadeau(!enfant.isCadeau());
-            }
-        });
-
 
         String prenom = enfant.getPrenom();
         Prenom.setText(prenom);
 
+
+        //Bouton validation
         boutonChercher.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -82,6 +86,7 @@ public class FicheEnfant extends AppCompatActivity {
 
     }
 
+    //Enregistrement de l'enfant dans les sharedPreferences
     public void enregistrer(ListeEnfant enfant){
         SharedPreferences.Editor edit = preferences.edit();
         if(enfant.isLettre() || enfant.isCadeau() ||enfant.isSage()){
